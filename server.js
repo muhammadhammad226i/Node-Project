@@ -7,7 +7,6 @@ const User = require('./models/user.model');
 
 const app = express();
 
-// ✅ Use proper CORS config
 app.use(cors({
   origin: 'http://localhost:5173', // React app URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
