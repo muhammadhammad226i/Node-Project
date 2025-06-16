@@ -1,29 +1,32 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./config/db');
 const userRoutes = require('./routes/user.routes');
-const User = require('./models/user.model');
+const { sequelize } = require('./models'); 
 
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:5173', // React app URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
 
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  credentials: true,               
+}));
 
-// ✅ Routes
+
 app.use('/users', userRoutes);
 
-const PORT = process.env.PORT || 3000;
 
-sequelize.sync({ alter: true })
+sequelize.authenticate()
   .then(() => {
-    console.log('DB connected & models synced');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    console.log('✅ Database connected.');
+   
   })
-  .catch(err => console.error('DB connection error:', err));
+  .catch(err => {
+    console.error('❌ Database connection error:', err);
+  });
+
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
